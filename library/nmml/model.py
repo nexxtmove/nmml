@@ -9,7 +9,7 @@ class Model:
     def __init__(self, fetch_data: Callable[[Arguments], Any],
                  process_data: Callable[[Any, Arguments], pandas.DataFrame],
                  predict: Callable[[pandas.DataFrame, Arguments], pandas.DataFrame],
-                 arguments: Arguments,
+                 arguments: Arguments = None,
                  version: int = 0):
         self.fetch_data = fetch_data
         self.process_data = process_data
