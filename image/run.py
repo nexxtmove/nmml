@@ -4,6 +4,11 @@ import time
 import requests
 import json
 
+url_prefix = 'https://'
+
+if 'local' in config.BASE_URL() or 'docker' in config.BASE_URL():
+    url_prefix = 'http://'
+
 print('Loading model...')
 start = time.time()
 
@@ -25,8 +30,8 @@ print('Processing data...')
 features = m.process_data(data, arguments)
 
 model_id = requests.get(
-    f'http://{config.BASE_URL()}/api/machine_learning_model/{config.MODEL_IDENTIFIER()}/get_id/').json()
-requests.patch(f'http://{config.BASE_URL()}/api/machine_learning_model/{model_id}/',
+    f'{url_prefix}{config.BASE_URL()}/api/machine_learning_model/{config.MODEL_IDENTIFIER()}/get_id/').json()
+requests.patch(f'{url_prefix}{config.BASE_URL()}/api/machine_learning_model/{model_id}/',
                json={'expected_results': len(features)})
 
 print('Data processed! Took:', time.time() - start)
@@ -52,7 +57,7 @@ print('Results prepared! Took:', time.time() - start)
 start = time.time()
 print('Sending results...')
 
-requests.post(f'http://{config.BASE_URL()}/api/machine_learning_model/{config.MODEL_IDENTIFIER()}/save_results/',
+requests.post(f'{url_prefix}{config.BASE_URL()}/api/machine_learning_model/{config.MODEL_IDENTIFIER()}/save_results/',
               json=prepared_results)
 
 print('Results sent! Took:', time.time() - start)
