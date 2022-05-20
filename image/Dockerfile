@@ -5,9 +5,9 @@ RUN apt-get install -y libgomp1 git
 
 WORKDIR /usr/src/app
 
-COPY run.py run.py
+COPY run.py ../run.py
 
 COPY requirements.txt requirements.txt
 RUN pip install --no-cache-dir -r requirements.txt
 
-CMD cp config/.env .env && pip install -r repository/requirements.txt && python run.py
+CMD cp config/.env .env && pip install -r repository/requirements.txt && python ../run.py
