@@ -2,7 +2,7 @@ name: Create and publish the runtime image
 
 on:
   push:
-    branches: ['main', 'dev']
+    branches: ['main']
 
 env:
   REGISTRY: ghcr.io
