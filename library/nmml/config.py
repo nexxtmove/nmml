@@ -21,6 +21,11 @@ def __reload_variables():
     environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
 
+def get_variable(name: str):
+    __reload_variables()
+    return env(name)
+
+
 def SSH_KEY_PATH():
     __reload_variables()
     return env('SSH_KEY_PATH')
