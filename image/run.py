@@ -3,6 +3,19 @@ from nmml import config
 import time
 import requests
 import json
+import math
+import pandas as pd
+
+memory_limit_in_mb = 10
+
+
+def get_memory_usage(df: pd.DataFrame) -> int:
+    """
+    Returns the memory usage of a pandas DataFrame in megabytes.
+    """
+    usage = df.memory_usage(index=True, deep=True).sum()
+    return usage / 1e6
+
 
 url_prefix = 'https://'
 
@@ -41,23 +54,25 @@ print('Predicting...')
 res = m.predict(features, arguments)
 
 print('Predicted! Took:', time.time() - start)
-print('Preparing sending results...')
-
-result_data = json.loads(res.to_json(orient='records'))
-
-prepared_results = []
-
-for row in result_data:
-    prepared_results.append({
-        'subject_id': row['subject_id'],
-        'result': row,
-    })
-
-print('Results prepared! Took:', time.time() - start)
-start = time.time()
 print('Sending results...')
 
-requests.post(f'{url_prefix}{config.BASE_URL()}/api/machine_learning_model/{config.MODEL_IDENTIFIER()}/save_results/',
-              json=prepared_results)
+batch_size = math.ceil(len(res) / (math.ceil(get_memory_usage(res) / memory_limit_in_mb) + 1))
 
-print('Results sent! Took:', time.time() - start)
+res.reset_index(inplace=True)
+
+for _, window in res.groupby(res.index // batch_size):
+    result_data = json.loads(pd.DataFrame(window).to_json(orient='records'))
+
+    prepared_results = []
+
+    for row in result_data:
+        prepared_results.append({
+            'subject_id': row['subject_id'],
+            'result': row,
+        })
+
+    requests.post(
+        f'{url_prefix}{config.BASE_URL()}/api/machine_learning_model/{config.MODEL_IDENTIFIER()}/save_results/',
+        json=prepared_results)
+
+print(f'Results sent! Took: {time.time() - start}. Sent {len(res)} results ({get_memory_usage(res)} MB) in {math.ceil(len(res) / batch_size)} batches.')
