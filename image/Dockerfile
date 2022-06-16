@@ -1,7 +1,7 @@
 FROM python:3.9-slim-bullseye
 
 RUN apt-get update
-RUN apt-get install -y libgomp1 git
+RUN apt-get install -y libgomp1 git libquadmath0
 
 WORKDIR /usr/src/app
 
