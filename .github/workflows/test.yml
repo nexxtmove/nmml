@@ -1,0 +1,30 @@
+name: Test library
+
+on:
+  pull_request:
+    paths:
+      - 'library/**/*'
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  test:
+    runs-on: ubuntu-20.04
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python 3.9
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+      - name: Install dependencies
+        run: |
+          cd library
+          python -m pip install --upgrade pip
+          pip install .
+      - name: Test with pytest
+        run: |
+          pwd
+          cd library
+          pytest
