@@ -26,6 +26,8 @@ class TestExecution:
         os.mkdir("repository")
 
         requests_mock.get(re.compile('/get_id/'), text="13")
+        requests_mock.get(re.compile('/heartbeat/'), text="{}")
+        requests_mock.get(re.compile('/processed_results/'), text='{"available_results": []}')
         requests_mock.patch(re.compile('.*'), text="{}")
         requests_mock.post(re.compile('/save_results/'), text="{}")
 

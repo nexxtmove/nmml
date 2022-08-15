@@ -9,6 +9,8 @@ from runtime.control_api import ControlApi
 class TestControlApi:
     def test_send_results_sends_small_results_in_one_batch(self, requests_mock):
         requests_mock.post(re.compile('/save_results/'), text="{}")
+        requests_mock.get(re.compile('/heartbeat/'), text="{}")
+        requests_mock.get(re.compile('/processed_results/'), text='{"available_results": []}')
 
         control_api = ControlApi()
 
@@ -22,6 +24,8 @@ class TestControlApi:
 
     def test_send_results_batches_results_when_too_big(self, requests_mock):
         requests_mock.post(re.compile('/save_results/'), text="{}")
+        requests_mock.get(re.compile('/heartbeat/'), text="{}")
+        requests_mock.get(re.compile('/processed_results/'), text='{"available_results": []}')
 
         control_api = ControlApi()
 
