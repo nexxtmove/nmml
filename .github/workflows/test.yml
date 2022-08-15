@@ -25,6 +25,5 @@ jobs:
           pip install .
       - name: Test with pytest
         run: |
-          pwd
           cd library
           pytest
