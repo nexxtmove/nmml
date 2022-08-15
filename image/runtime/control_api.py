@@ -22,7 +22,19 @@ class ControlApi:
 
         requests.patch(f'{self.api_url}/{model_id}/', json={'expected_results': expected_results})
 
+    def send_heartbeat(self):
+        print("Sending heartbeat")
+        requests.get(f'{self.api_url}/{config.MODEL_IDENTIFIER()}/heartbeat/')
+
+    def get_processed_results(self):
+        response = requests.get(f'{self.api_url}/{config.MODEL_IDENTIFIER()}/processed_results/').json()
+
+        return response['available_results']
+
     def send_results(self, results: pd.DataFrame):
+        if len(results) == 0:
+            return
+
         print('Sending results...')
         start = time.time()
 

@@ -14,4 +14,5 @@ requests==2.27.1
 pytest==7.1.2
 requests-mock==1.9.3
 numpy
+schedule==1.1.0
 nmml @ git+https://github.com/nexxtmove/nmml.git@main#subdirectory=library
