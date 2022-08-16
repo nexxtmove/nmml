@@ -3,6 +3,8 @@ import threading
 import time
 
 
+# Lots of help from https://stackoverflow.com/a/60244694 here
+
 def run_continuously(self, interval=1):
     """Continuously run, while executing pending jobs at each elapsed
     time interval.
